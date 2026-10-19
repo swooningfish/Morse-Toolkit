@@ -2,53 +2,75 @@
 
 [![Build](https://github.com/swooningfish/Morse-Toolkit/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/swooningfish/Morse-Toolkit/actions/workflows/build.yml)
 
-A Morse code trainer for Android and iOS, written in Kotlin with Compose Multiplatform.
-All the app code is shared between both platforms.
+Learn Morse code on your phone. Tap it out, hear it, and work through levels at your own pace.
+Works on Android and iPhone.
 
-## What it does
+## What you can do
 
-| Tab | Purpose |
-| --- | --- |
-| **Key** | Tap out dits and dahs and see them turn into letters. Or type text and send it as Morse with sound and light. |
-| **Learn** | Levels that teach characters a few at a time, then prosigns, Q-codes, abbreviations, callsigns, words, phrases and sentences. Score 90% to unlock the next level. Pick the learning order: **Koch**, **A to Z** or **Easiest first**. Also has a **Custom** mode for choosing your own characters. |
-| **Practice** | Free practice in any category: letters, numbers, punctuation, prosigns, Q-codes, abbreviations, callsigns, words, phrases, sentences. Choose **Listen** (hear it and answer), **Send** (tap it out) or **Both**. |
-| **Codes** | Reference list of every code with its meaning and a play button. |
-| **Settings** | Theme (system / light / dark), key type, speeds, tone pitch, sound, and light (screen flash or camera torch). |
+**Tap out Morse and see what you sent.** Use the key on the first screen and your dits and dahs
+turn into letters as you go. You can also type a message and have the phone send it back to you
+as sound, a flashing screen, or the camera torch.
 
-**Key types**: straight key (short press = dit, long press = dah), separate Dit + Dah buttons, or iambic paddles (hold to repeat, squeeze both to alternate).
+**Learn step by step.** The Learn tab starts with two letters and adds one more each level.
+Get 90% and the next level unlocks. Once you know the characters, it moves on to prosigns,
+Q-codes, abbreviations, callsigns, words, phrases and full sentences.
 
-**Timing**: playback uses Farnsworth timing. Letters play at the *letter speed* with longer gaps between them so the *overall speed* is slower, which is the standard way to learn by ear.
+You can choose how the letters are introduced:
 
-## Project layout
+- **Koch**: the method most radio operators learn with
+- **A to Z**: plain alphabetical order
+- **Easiest first**: short patterns like E, T and I before the longer ones
 
-```
-composeApp/src/commonMain   shared code (all UI and logic)
-  morse/                    code table, keyer, player, content, levels, drills
-  data/AppSettings.kt       saved settings and progress
-  ui/                       screens
-composeApp/src/androidMain  Android tone (AudioTrack), torch, MainActivity
-composeApp/src/iosMain      iOS tone (AVAudioEngine), torch, view controller
-iosApp/                     iOS app shell (Xcode project is generated with XcodeGen)
-.github/workflows/build.yml CI that builds the Android APK and the iOS simulator app
-```
+Struggling with a few characters? Use **Custom practice** to pick just those.
 
-## Building
+**Practise anything.** Pick a category and choose whether to listen (the app plays it and you
+answer), send (you tap it out), or a mix of both.
 
-You need JDK 17 or newer. This repo has no Gradle wrapper jar yet. Create one once with a
-locally installed Gradle (`gradle wrapper --gradle-version 8.11.1`), or open the project in
-Android Studio, which sets it up for you.
+**Look things up.** The Codes tab lists every letter, number, prosign, Q-code and abbreviation
+with its meaning. Tap one to hear it.
 
-### Android
+## Pick the key that suits you
 
-Open the folder in Android Studio (with the Kotlin Multiplatform plugin) and run `composeApp`, or:
+- **Straight key**: one big button. A quick tap is a dit, holding it is a dah.
+- **Dit + Dah**: two buttons, one for each. The easiest way to start.
+- **Paddles**: hold one side to repeat it, or squeeze both to alternate, just like an iambic paddle.
+
+You can switch between them at any time from the Key screen or in Settings.
+
+## Tips
+
+- If your dahs keep showing up as dits, or letters run together, turn down
+  **Your keying speed** in Settings.
+- Learning by ear is easier when letters play at full speed with bigger gaps between them.
+  Leave **Letter speed** around 20 WPM and lower **Overall speed** instead.
+- Turn on **Light → Torch** and you can signal across a room or a field.
+
+## Getting the app
+
+There's no app store release yet.
+
+**Android**: open the latest successful run on the
+[Actions page](https://github.com/swooningfish/Morse-Toolkit/actions/workflows/build.yml),
+download `morse-toolkit-debug-apk` from the Artifacts section, unzip it and install the APK.
+Your phone may ask you to allow installs from unknown sources.
+
+**iPhone**: for now you need a Mac with Xcode to build it yourself (see below).
+
+## Building it yourself
+
+The app is written in Kotlin with Compose Multiplatform, so Android and iOS share the same code.
+You'll need JDK 17 or newer.
+
+Android: open the project in Android Studio and run `composeApp`, or from the command line:
 
 ```bash
 ./gradlew :composeApp:assembleDebug
 ```
 
-The APK is written to `composeApp/build/outputs/apk/debug/`.
+There's no Gradle wrapper checked in yet. If `./gradlew` is missing, run
+`gradle wrapper --gradle-version 8.11.1` once, or just open the project in Android Studio.
 
-### iOS (needs a Mac with Xcode)
+iPhone (on a Mac):
 
 ```bash
 brew install xcodegen
@@ -58,10 +80,6 @@ brew install xcodegen
 cd iosApp && xcodegen && open iosApp.xcodeproj
 ```
 
-Set your signing team in Xcode, then run on a simulator or device. The Xcode build phase
-compiles the Kotlin framework for you.
+Choose your signing team in Xcode and press Run.
 
-### CI
-
-Pushing to GitHub runs `.github/workflows/build.yml`. It builds the Android debug APK
-(downloadable from the run's artifacts) and compiles the iOS app for the simulator on a macOS runner.
+Every push to GitHub builds both versions automatically.
