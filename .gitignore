@@ -9,3 +9,4 @@ captures/
 iosApp/iosApp.xcodeproj/
 iosApp/build/
 xcuserdata/
+out/

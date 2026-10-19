@@ -27,6 +27,15 @@ jobs:
           name: morse-toolkit-debug-apk
           path: composeApp/build/outputs/apk/debug/*.apk
 
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build APK with Docker
+        run: docker build --output out .
+      - name: Check the APK was produced
+        run: ls -l out/*.apk
+
   ios:
     runs-on: macos-14
     steps:

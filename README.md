@@ -61,7 +61,9 @@ Your phone may ask you to allow installs from unknown sources.
 The app is written in Kotlin with Compose Multiplatform, so Android and iOS share the same code.
 You'll need JDK 17 or newer.
 
-Android: open the project in Android Studio and run `composeApp`, or from the command line:
+### Android
+
+Open the project in Android Studio and run `composeApp`, or from the command line:
 
 ```bash
 ./gradlew :composeApp:assembleDebug
@@ -70,7 +72,20 @@ Android: open the project in Android Studio and run `composeApp`, or from the co
 There's no Gradle wrapper checked in yet. If `./gradlew` is missing, run
 `gradle wrapper --gradle-version 8.11.1` once, or just open the project in Android Studio.
 
-iPhone (on a Mac):
+### Android with Docker
+
+If you'd rather not install Java, Gradle and the Android SDK, Docker can do the whole build.
+From the project folder:
+
+```bash
+docker build --output out .
+```
+
+When it finishes, the APK is in the `out` folder. The first build takes a while because it
+downloads the Android SDK; later builds are faster. Building this way accepts the Android SDK
+licence. Docker can't build the iPhone version, because that needs a Mac with Xcode.
+
+### iPhone (on a Mac)
 
 ```bash
 brew install xcodegen
