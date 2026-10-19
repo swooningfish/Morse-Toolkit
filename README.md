@@ -49,9 +49,8 @@ You can switch between them at any time from the Key screen or in Settings.
 
 There's no app store release yet.
 
-**Android**: open the latest successful run on the
-[Actions page](https://github.com/swooningfish/Morse-Toolkit/actions/workflows/build.yml),
-download `morse-toolkit-debug-apk` from the Artifacts section, unzip it and install the APK.
+**Android**: download the APK from the latest
+[release](https://github.com/swooningfish/Morse-Toolkit/releases/latest) and open it on your phone.
 Your phone may ask you to allow installs from unknown sources.
 
 **iPhone**: for now you need a Mac with Xcode to build it yourself (see below).
@@ -98,3 +97,19 @@ cd iosApp && xcodegen && open iosApp.xcodeproj
 Choose your signing team in Xcode and press Run.
 
 Every push to GitHub builds both versions automatically.
+
+### Making a release
+
+Tag a version and push the tag:
+
+```bash
+git tag v1.0.0
+```
+
+```bash
+git push origin v1.0.0
+```
+
+GitHub builds the APK and publishes it on the
+[Releases page](https://github.com/swooningfish/Morse-Toolkit/releases), with notes listing the
+changes since the last release.

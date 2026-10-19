@@ -1,0 +1,37 @@
+name: Release
+
+# Push a tag like v1.0.0 to publish a GitHub Release with the Android APK attached:
+#   git tag v1.0.0 && git push origin v1.0.0
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+env:
+  GRADLE_VERSION: "8.11.1"
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+      - name: Build APK
+        run: gradle :composeApp:assembleDebug
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          cp composeApp/build/outputs/apk/debug/composeApp-debug.apk "morse-toolkit-$TAG.apk"
+          gh release create "$TAG" "morse-toolkit-$TAG.apk" \
+            --title "Morse Toolkit $TAG" \
+            --generate-notes
