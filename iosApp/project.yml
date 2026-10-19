@@ -12,6 +12,7 @@ targets:
   iosApp:
     type: application
     platform: iOS
+    scheme: {}
     sources:
       - iosApp
     info:

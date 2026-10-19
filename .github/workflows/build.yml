@@ -12,8 +12,8 @@ jobs:
   android:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -30,8 +30,8 @@ jobs:
   ios:
     runs-on: macos-14
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: "17"
@@ -40,13 +40,25 @@ jobs:
           gradle-version: ${{ env.GRADLE_VERSION }}
       - name: Create Gradle wrapper (used by the Xcode build phase)
         run: gradle wrapper --gradle-version ${{ env.GRADLE_VERSION }}
+      - name: Compile Kotlin for iOS Simulator
+        run: |
+          set -o pipefail
+          ./gradlew :composeApp:linkDebugFrameworkIosSimulatorArm64 2>&1 | tee kotlin.log
       - name: Generate Xcode project
         run: |
           brew install xcodegen
           cd iosApp && xcodegen
+          xcodebuild -list -project iosApp.xcodeproj
       - name: Build for iOS Simulator
         run: |
+          set -o pipefail
           xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp \
             -configuration Debug -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            ARCHS=arm64 CODE_SIGNING_ALLOWED=NO build
+            ARCHS=arm64 CODE_SIGNING_ALLOWED=NO build 2>&1 | tee xcodebuild.log
+      - name: Report errors
+        if: failure()
+        run: |
+          # Annotations are visible without signing in, unlike the raw logs.
+          cat kotlin.log xcodebuild.log 2>/dev/null | grep -E "^e: |error:|FAILED|What went wrong" -A2 | head -40 \
+            | while IFS= read -r line; do echo "::error::$line"; done
