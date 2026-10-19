@@ -1,5 +1,7 @@
 # Morse Toolkit
 
+[![Build](https://github.com/swooningfish/Morse-Toolkit/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/swooningfish/Morse-Toolkit/actions/workflows/build.yml)
+
 A Morse code trainer for Android and iOS, written in Kotlin with Compose Multiplatform.
 All the app code is shared between both platforms.
 
